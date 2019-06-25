@@ -1,1 +1,4 @@
-# Leetcode & HackerRank problems
+# CS Practice
+- Algorithms.
+- DataStructure.
+- Problems from Leetcode & Hackerrank.
