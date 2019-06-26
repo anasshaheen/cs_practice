@@ -1,11 +1,10 @@
 ﻿using System;
-using CS.DataStructure.Trees;
 
 namespace CS.Problems.Leetcode.Trees
 {
     public class MaximumDepthOfBinaryTree
     {
-        public static int Solve(BinarySearchTree<int>.TreeNode<int> node)
+        public static int Solve(TreeNode node)
         {
             if (node == null)
             {

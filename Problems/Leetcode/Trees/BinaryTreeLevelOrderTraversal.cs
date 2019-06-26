@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using CS.DataStructure.Trees;
 
 namespace CS.Problems.Leetcode.Trees
 {
     public class BinaryTreeLevelOrderTraversal
     {
-        public IList<IList<int>> Solve(BinarySearchTree<int>.TreeNode<int> root)
+        public static IList<IList<int>> Solve(TreeNode root)
         {
             var result = new List<IList<int>>();
             if (root == null)
@@ -14,7 +13,7 @@ namespace CS.Problems.Leetcode.Trees
                 return result;
             }
 
-            var queue = new Queue<BinarySearchTree<int>.TreeNode<int>>();
+            var queue = new Queue<TreeNode>();
             queue.Enqueue(root);
 
             while (queue.Any())
@@ -25,7 +24,7 @@ namespace CS.Problems.Leetcode.Trees
                 while (count > 0)
                 {
                     var node = queue.Dequeue();
-                    levelItems.Add(node.Data);
+                    levelItems.Add(node.Val);
 
                     if (node.Left != null)
                     {
