@@ -1,15 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace CS.DataStructure.Trees
 {
     public class BinarySearchTree<TData> where TData : IComparable
     {
-        public TreeNode<TData> Root;
+        private TreeNode<TData> _root;
 
         public BinarySearchTree(TreeNode<TData> root = null)
         {
-            Root = root;
+            _root = root;
         }
 
         public void Traverse(TraversalTypes type = TraversalTypes.InOrder)
@@ -17,31 +19,37 @@ namespace CS.DataStructure.Trees
             switch (type)
             {
                 case TraversalTypes.InOrder:
-                    InOrderTraversal(Root);
+                    InOrderTraversal(_root);
                     break;
                 case TraversalTypes.PostOrder:
-                    PostOrderTraversal(Root);
+                    PostOrderTraversal(_root);
+                    break;
+                case TraversalTypes.PreOrder:
+                    PreOrderTraversal(_root);
+                    break;
+                case TraversalTypes.DFS:
+                    DfsTraversal(_root);
                     break;
                 default:
-                    PreOrderTraversal(Root);
+                    BfsTraversal(_root);
                     break;
             }
         }
 
         public bool Exists(TData data)
         {
-            return SearchHelper(Root, data);
+            return SearchHelper(_root, data);
         }
 
         public void Insert(TData data)
         {
-            if (Root == null)
+            if (_root == null)
             {
-                Root = new TreeNode<TData>(data);
+                _root = new TreeNode<TData>(data);
             }
             else
             {
-                InsertHelper(Root, data);
+                InsertHelper(_root, data);
             }
         }
 
@@ -49,12 +57,12 @@ namespace CS.DataStructure.Trees
         {
             try
             {
-                if (Root == null)
+                if (_root == null)
                 {
                     return false;
                 }
 
-                DeleteHelper(Root, data);
+                DeleteHelper(_root, data);
 
                 return true;
             }
@@ -65,7 +73,59 @@ namespace CS.DataStructure.Trees
             }
         }
 
+        public TData FindMin()
+        {
+            if (_root == null)
+            {
+                return default;
+            }
+
+            var current = _root;
+            while (current.Left != null)
+            {
+                current = current.Left;
+            }
+
+            return current.Data;
+        }
+
+        public TData FindMax()
+        {
+            if (_root == null)
+            {
+                return default;
+            }
+
+            var current = _root;
+            while (current.Right != null)
+            {
+                current = current.Right;
+            }
+
+            return current.Data;
+        }
+
+        public int FindHeight()
+        {
+            if (_root == null)
+            {
+                return 0;
+            }
+
+            return FindHeight(_root);
+        }
+
         #region Helpers
+
+        private int FindHeight(TreeNode<TData> node)
+        {
+            if (node == null)
+            {
+                return 0;
+            }
+
+            return 1 + Math.Max(FindHeight(node.Left), FindHeight(node.Right));
+        }
 
         private TreeNode<TData> InsertHelper(TreeNode<TData> node, TData data)
         {
@@ -120,6 +180,61 @@ namespace CS.DataStructure.Trees
             InOrderTraversal(node.Left);
             InOrderTraversal(node.Right);
             Console.WriteLine(node.Data);
+        }
+
+        private void BfsTraversal(TreeNode<TData> node)
+        {
+            if (node == null)
+            {
+                return;
+            }
+
+            var queue = new Queue<TreeNode<TData>>();
+            queue.Enqueue(node);
+            while (queue.Any())
+            {
+                var currentNode = queue.Dequeue();
+
+                Console.WriteLine(currentNode.Data);
+
+                if (currentNode.Left != null)
+                {
+                    queue.Enqueue(currentNode.Left);
+                }
+
+                if (currentNode.Right != null)
+                {
+                    queue.Enqueue(currentNode.Right);
+                }
+            }
+        }
+
+        private void DfsTraversal(TreeNode<TData> node)
+        {
+            if (node == null)
+            {
+                return;
+            }
+
+            var stack = new Stack<TreeNode<TData>>();
+            stack.Push(node);
+
+            while (stack.Any())
+            {
+                var currentNode = stack.Pop();
+
+                Console.WriteLine(currentNode.Data);
+
+                if (currentNode.Left != null)
+                {
+                    stack.Push(currentNode.Left);
+                }
+
+                if (currentNode.Right != null)
+                {
+                    stack.Push(currentNode.Right);
+                }
+            }
         }
 
         private bool SearchHelper(TreeNode<TData> node, TData data)
@@ -190,16 +305,22 @@ namespace CS.DataStructure.Trees
             }
 
             return node;
-        }
 
-        private TData FindMin(TreeNode<TData> node)
-        {
-            if (node.Left == null)
+            TData FindMin(TreeNode<TData> root)
             {
-                return node.Data;
-            }
+                if (root == null)
+                {
+                    return default;
+                }
 
-            return FindMin(node.Left);
+                var current = root;
+                while (current.Left != null)
+                {
+                    current = current.Left;
+                }
+
+                return current.Data;
+            }
         }
 
         #endregion
@@ -223,6 +344,8 @@ namespace CS.DataStructure.Trees
     {
         InOrder = 1,
         PreOrder = 2,
-        PostOrder = 3
+        PostOrder = 3,
+        BFS = 4,
+        DFS = 5
     }
 }

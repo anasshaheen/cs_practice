@@ -130,9 +130,9 @@ namespace CS.Problems.Leetcode
             for (var i = 0; i < word.Length; i++)
             {
                 var ch = word[i];
-                if (current._nodes.ContainsKey(ch))
+                if (current.Exists(ch))
                 {
-                    current = current._nodes[ch];
+                    current = current.GetNode(ch);
                     if (i == word.Length - 1)
                     {
                         current.IsValid = true;
